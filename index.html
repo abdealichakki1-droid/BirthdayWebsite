@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Alfiee ❤️</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Satoshi:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --aurora-1: hsla(333, 70%, 55%, 0.4);
+            --aurora-2: hsla(282, 82%, 54%, 0.3);
+            --aurora-3: hsla(210, 89%, 60%, 0.3);
+            --aurora-4: hsla(35, 90%, 60%, 0.3);
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0c0a09;
+            font-family: 'Satoshi', sans-serif;
+            color: #f8fafc;
+        }
+
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Animated Aurora Background */
+        .aurora-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 20% 30%, var(--aurora-1), transparent 40%),
+                        radial-gradient(circle at 80% 70%, var(--aurora-2), transparent 40%),
+                        radial-gradient(circle at 50% 50%, var(--aurora-3), transparent 50%),
+                        radial-gradient(circle at 10% 80%, var(--aurora-4), transparent 40%);
+            filter: blur(80px);
+            animation: aurora-flow 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes aurora-flow {
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.2) translate(5%, 5%); }
+            100% { transform: scale(1) translate(-5%, -2%); }
+        }
+
+        /* Glassmorphism Styles */
+        .glass-card {
+            background: rgba(12, 10, 9, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 90%;
+            display: none; /* Controlled by JS */
+        }
+
+        .text-gradient {
+            background: linear-gradient(to bottom right, #ff9eb5, #ffffff, #ff7eb3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ec4899, #ef4444);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 30px rgba(236, 72, 153, 0.6);
+        }
+
+        .progress-track {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        #progress-bar {
+            width: 20%;
+            height: 100%;
+            background: linear-gradient(to right, #ec4899, #ef4444);
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .bento-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.25rem;
+            border-radius: 16px;
+        }
+
+        .step-active { display: block !important; }
+
+        #no-button {
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        #music-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .typing::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <div class="aurora-container"></div>
+    <canvas id="canvas3d" class="fixed top-0 left-0 -z-10 w-full h-full"></canvas>
+
+    <div class="progress-track">
+        <div id="progress-bar"></div>
+    </div>
+
+    <div id="music-toggle" onclick="toggleMusic()">🎵</div>
+
+    <main class="flex items-center justify-center min-h-screen relative z-10 p-4">
+        
+        <div id="step-1" class="glass-card step-active text-center">
+            <div class="text-6xl mb-6 animate-bounce">❤️</div>
+            <h1 class="text-3xl md:text-4xl font-bold mb-4 text-gradient">Hey my beautiful alfiee you are my life🥹💝</h1>
+            <p class="text-lg text-gray-300 mb-8 leading-relaxed">
+                I love you soo soo muchh❤️. I built a little world for you, just to bring a smile to your face on your special day.
+            </p>
+            <button onclick="nextStep(2)" class="btn-primary px-10 py-4 rounded-full text-white font-bold text-lg">Let's Begin</button>
+        </div>
+
+        <div id="step-2" class="glass-card text-center">
+            <div class="text-6xl mb-6">🎉</div>
+            <h1 class="text-4xl font-bold mb-4 text-gradient">Happy Birthday my future wify ❤️!</h1>
+            <p class="text-lg text-gray-300 mb-8">
+                Another year of you making the world brighter. Your existence is a gift, and I'm so lucky to have you in my life💖.
+            </p>
+            <button onclick="nextStep(3)" class="btn-primary px-10 py-4 rounded-full text-white font-bold text-lg">There's more...</button>
+        </div>
+
+        <div id="step-3" class="glass-card max-w-4xl">
+            <h2 class="text-3xl font-bold mb-6 text-gradient text-center">A Few Things I Adore About You</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bento-item md:col-span-2">
+                    <h3 class="text-pink-400 font-bold mb-2">✨ Your Unmatched Kindness</h3>
+                    <p class="text-sm text-gray-300">Alfiee you doesn’t just show kindness, you is kindness my jaan, and I feel incredibly lucky to have someone like you in my life and never want to lose you.</p>
+                </div>
+                <div class="bento-item">
+                    <h3 class="text-pink-400 font-bold mb-2">😊 Your Calmness</h3>
+                    <p class="text-sm text-gray-300">Even when I hurt you over silly things, you stay patient and understanding. It makes me want to become a better person for you.</p>
+                </div>
+                <div class="bento-item">
+                    <h3 class="text-pink-400 font-bold mb-2">🌟 Your Beauty</h3>
+                    <p class="text-sm text-gray-300">It’s in your heart, your soul, and the way you love so purely. To me, you’re the most beautiful person in every possible way.</p>
+                </div>
+            </div>
+            <div class="flex justify-center mt-8">
+                <button onclick="nextStep(4)" class="btn-primary px-10 py-4 rounded-full text-white font-bold">Remember this?</button>
+            </div>
+        </div>
+
+        <div id="step-4" class="glass-card text-center">
+            <h2 id="proposal-text" class="text-3xl font-bold mb-8 text-gradient min-h-[80px]"></h2>
+            <div id="proposal-buttons" class="flex flex-col md:flex-row items-center justify-center gap-4">
+                <button onclick="handleYes()" class="btn-primary px-12 py-4 rounded-full text-white font-bold text-xl">Yes ❤️</button>
+                <button id="no-button" onmouseover="moveNo()" onclick="moveNo()" class="bg-gray-800 px-12 py-4 rounded-full text-white font-bold">No 💔</button>
+            </div>
+            <div id="success-msg" class="hidden">
+                <p class="text-2xl text-pink-400 font-bold mt-4">You just made me the happiest person alive 💍❤️</p>
+                <p class="text-gray-400 mt-2">Forever starts now...</p>
+                <button onclick="nextStep(5)" class="btn-primary mt-8 px-10 py-4 rounded-full text-white font-bold">One last thing...</button>
+            </div>
+        </div>
+
+        <div id="step-5" class="glass-card text-center">
+            <div class="text-6xl mb-6">🎂</div>
+            <h2 class="text-3xl font-bold mb-4 text-gradient">My Wish For You</h2>
+            <div class="max-h-60 overflow-y-auto text-gray-300 text-left space-y-4 pr-2">
+                <p>On your special day, I just want you to know how deeply you are loved. You deserve all the happiness, success, and love in this world.</p>
+                <p>I promise to always stand by your side, making you smile and protecting your heart. I’m really lucky to call you mine.</p>
+                <p>Happy Birthday once again, my beautiful Alfiee. I love you more than words can ever express ❤️✨.</p>
+            </div>
+            <div id="final-message-area" class="mt-6 font-bold text-2xl text-pink-500 opacity-0"></div>
+            <button id="celebrate-btn" onclick="celebrate()" class="btn-primary mt-8 px-10 py-4 rounded-full text-white font-bold text-lg w-full">Celebrate!</button>
+        </div>
+
+    </main>
+
+    <script>
+        // --- 3D Scene (Three.js) ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas3d'), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const hearts = [];
+        const heartShape = new THREE.Shape();
+        heartShape.moveTo(25, 25);
+        heartShape.bezierCurveTo(25, 25, 20, 0, 0, 0);
+        heartShape.bezierCurveTo(-30, 0, -30, 35, -30, 35);
+        heartShape.bezierCurveTo(-30, 55, -10, 77, 25, 95);
+        heartShape.bezierCurveTo(60, 77, 80, 55, 80, 35);
+        heartShape.bezierCurveTo(80, 35, 80, 0, 50, 0);
+        heartShape.bezierCurveTo(35, 0, 25, 25, 25, 25);
+
+        const extrudeSettings = { depth: 8, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 1, bevelThickness: 1 };
+        const geometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
+        geometry.scale(0.02, 0.02, 0.02);
+        geometry.rotateZ(Math.PI);
+
+        for (let i = 0; i < 25; i++) {
+            const material = new THREE.MeshPhongMaterial({ color: 0xff3366, shininess: 100 });
+            const heart = new THREE.Mesh(geometry, material);
+            heart.position.set((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20, (Math.random() - 0.5) * 10);
+            heart.rotation.y = Math.random() * Math.PI;
+            heart.scale.setScalar(Math.random() * 0.5 + 0.5);
+            heart.userData = { speed: Math.random() * 0.02 + 0.01, phase: Math.random() * Math.PI * 2 };
+            scene.add(heart);
+            hearts.push(heart);
+        }
+
+        const light = new THREE.PointLight(0xffffff, 1, 100);
+        light.position.set(0, 0, 10);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0x404040));
+
+        camera.position.z = 15;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            hearts.forEach(h => {
+                h.position.y += Math.sin(Date.now() * 0.001 + h.userData.phase) * 0.01;
+                h.rotation.y += 0.01;
+            });
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // --- Navigation Logic ---
+        let currentStep = 1;
+        function nextStep(step) {
+            gsap.to(`#step-${currentStep}`, {
+                opacity: 0, scale: 0.9, duration: 0.5, onComplete: () => {
+                    document.getElementById(`step-${currentStep}`).classList.remove('step-active');
+                    currentStep = step;
+                    const nextEl = document.getElementById(`step-${step}`);
+                    nextEl.classList.add('step-active');
+                    gsap.fromTo(nextEl, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.5 });
+                    
+                    document.getElementById('progress-bar').style.width = (step * 20) + '%';
+
+                    if(step === 4) startProposalTyping();
+                }
+            });
+        }
+
+        // --- Step 4: Proposal Logic ---
+        function startProposalTyping() {
+            const text = "From the day I met you, my life changed… Will you marry me?";
+            const el = document.getElementById('proposal-text');
+            el.innerHTML = "";
+            let i = 0;
+            const timer = setInterval(() => {
+                if(i < text.length) {
+                    el.innerHTML += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(timer);
+                }
+            }, 50);
+        }
+
+        const noMessages = ["Are you sure? 🥺", "Think again… 💭", "I’ll love you forever ❤️", "Please don’t break my heart 💔"];
+        function moveNo() {
+            const btn = document.getElementById('no-button');
+            const x = (Math.random() - 0.5) * 300;
+            const y = (Math.random() - 0.5) * 300;
+            gsap.to(btn, { x, y, duration: 0.3 });
+            btn.innerText = noMessages[Math.floor(Math.random() * noMessages.length)];
+        }
+
+        function handleYes() {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            document.getElementById('proposal-buttons').classList.add('hidden');
+            document.getElementById('success-msg').classList.remove('hidden');
+        }
+
+        // --- Step 5: Finale ---
+        function celebrate() {
+            const btn = document.getElementById('celebrate-btn');
+            btn.disabled = true;
+            gsap.to(btn, { opacity: 0, duration: 0.5 });
+
+            // Final Text
+            const finalArea = document.getElementById('final-message-area');
+            finalArea.innerText = "Happy Birthday my jaan ❤️";
+            gsap.to(finalArea, { opacity: 1, y: -20, duration: 1, delay: 0.5 });
+
+            // Multi-layered Confetti
+            const end = Date.now() + (5 * 1000);
+            (function frame() {
+                confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff3366', '#ffffff'] });
+                confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff3366', '#ffffff'] });
+                
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+
+            // Emoji Confetti
+            setTimeout(() => {
+                var scalar = 2;
+                var heart = confetti.shapeFromText({ text: '❤️', scalar });
+                confetti({ shapes: [heart], particleCount: 30, spread: 100, origin: { y: 0.7 } });
+            }, 1000);
+
+            // 3D Hearts Final Exit
+            hearts.forEach((h, index) => {
+                gsap.to(h.position, {
+                    x: (Math.random() - 0.5) * 50,
+                    y: 20,
+                    z: (Math.random() - 0.5) * 50,
+                    duration: 3,
+                    delay: index * 0.05
+                });
+                gsap.to(h.material, { opacity: 0, duration: 3, delay: index * 0.05 });
+            });
+        }
+
+        // Audio Handling (Modern browsers require interaction)
+        const audio = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'); // Placeholder romantic instrumental
+        audio.loop = true;
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                audio.pause();
+                document.getElementById('music-toggle').innerText = "🔇";
+            } else {
+                audio.play();
+                document.getElementById('music-toggle').innerText = "🎵";
+            }
+            isPlaying = !isPlaying;
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
